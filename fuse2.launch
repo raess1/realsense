@@ -79,7 +79,7 @@
      <param name="decimation"  type="double" value="4"/>
      <param name="voxel_size"  type="double" value="0.0"/>
      <param name="approx_sync" type="bool"   value="false"/>
-
+     </node>
        <!-- END -->
     
     
