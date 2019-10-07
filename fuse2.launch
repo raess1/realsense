@@ -75,11 +75,11 @@
      <remap from="depth/image"       to="/camera/aligned_depth_to_color/image_raw"/>
      <remap from="rgb/camera_info"   to="/camera/color/camera_info"/>
      <remap from="cloud"             to="voxel_cloud" />
-
+       </node>
      <param name="decimation"  type="double" value="4"/>
      <param name="voxel_size"  type="double" value="0.0"/>
      <param name="approx_sync" type="bool"   value="false"/>
-     </node>
+   
        <!-- END -->
     
     
