@@ -61,4 +61,19 @@
     <param name="/ukf_se/imu0_relative" value="false"/>
     <param name="/ukf_se/use_control" value="false"/>
     <!-- <param name="/ukf_se/odom0_config" value="{true,true,true,}"/> -->
+    
+    
+   <node pkg="rviz" type="rviz" name="rviz" args="-d $(find rtabmap_ros)/launch/config/rgbd.rviz"/>
+   <node pkg="nodelet" type="nodelet" name="points_xyzrgb" args="standalone rtabmap_ros/point_cloud_xyzrgb">
+     <remap from="rgb/image"         to="/camera/color/image_raw/>
+     <remap from="depth/image"       to="/camera/aligned_depth_to_color/image_raw"/>
+     <remap from="rgb/camera_info"   to="/camera/color/camera_info"/>
+     <remap from="cloud"             to="voxel_cloud" />
+
+     <param name="decimation"  type="double" value="4"/>
+     <param name="voxel_size"  type="double" value="0.0"/>
+     <param name="approx_sync" type="bool"   value="false"/>
+   </node>
+    
+    
 </launch>
