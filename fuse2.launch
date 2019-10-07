@@ -5,6 +5,11 @@
         <arg name="align_depth" value="true"/>
     </include>
     
+    <!-- Start the ADIS16465-1 IMU over ttyACM0 -->
+<include file="$(find adi_driver)/launch/adis16470.launch">
+</include>
+    <!-- END -->
+    
 <arg name="use_odom_topic" default="true"/>
 <group ns="rtabmap">
   <node pkg="rtabmap_ros" type="rgbd_odometry" name="visual_odometry" output="screen">
@@ -62,7 +67,7 @@
     <param name="/ukf_se/use_control" value="false"/>
     <!-- <param name="/ukf_se/odom0_config" value="{true,true,true,}"/> -->
     
-    
+        <!-- RVIZ config of rtabmap -->
    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find rtabmap_ros)/launch/config/rgbd.rviz"/>
 
     <node pkg="nodelet" type="nodelet" name="points_xyzrgb" args="standalone rtabmap_ros/point_cloud_xyzrgb">
@@ -74,7 +79,8 @@
      <param name="decimation"  type="double" value="4"/>
      <param name="voxel_size"  type="double" value="0.0"/>
      <param name="approx_sync" type="bool"   value="false"/>
-    </node>
+
+       <!-- END -->
     
     
 </launch>
