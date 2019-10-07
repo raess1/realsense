@@ -5,15 +5,36 @@
         <arg name="align_depth" value="true"/>
     </include>
     
-    <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
-        <arg name="args" value="--delete_db_on_start"/>
-        <arg name="rgb_topic" value="/camera/color/image_raw"/>
-        <arg name="depth_topic" value="/camera/aligned_depth_to_color/image_raw"/>
-        <arg name="camera_info_topic" value="/camera/color/camera_info"/>
-        <arg name="depth_camera_info_topic" value="/camera/depth/camera_info"/>
-        <arg name="rtabmapviz" value="false"/>
-        <arg name="rviz" value="true"/>
-    </include>
+<arg name="use_odom_topic" default="true"/>
+<group ns="rtabmap">
+  <node pkg="rtabmap_ros" type="rgbd_odometry" name="visual_odometry" output="screen">
+    <remap from="rgb/image"       to="/camera/color/image_raw"/>
+    <remap from="depth/image"     to="/camera/aligned_depth_to_color/image_raw"/>
+    <remap from="rgb/camera_info" to="/camera/color/camera_info"/>
+
+    <param name="frame_id"               type="string" value="camera_link"/>
+    <param name="publish_tf"             type="bool"   value="false"/>
+    <param name="publish_null_when_lost" type="bool"   value="false"/>
+    <param name="approx_sync"            type="bool"   value="false"/> 
+    <param name="Odom/ResetCountdown"    type="string" value="1"/>
+  </node>
+
+  <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="--delete_db_on_start">
+    <param name="frame_id"        type="string" value="camera_link"/>
+
+    <remap from="rgb/image"       to="/camera/color/image_raw"/>
+    <remap from="depth/image"     to="/camera/aligned_depth_to_color/image_raw"/>
+    <remap from="rgb/camera_info" to="/camera/color/camera_info"/>
+
+    <!-- robot_localization output --> 
+    <remap if="$(arg use_odom_topic)" from="odom"  to="/odometry/filtered"/>   
+    <!-- odom frame of robot_localization -->
+    <param unless="$(arg use_odom_topic)" name="odom_frame_id" type="string" value="odom_combined"/> 
+    <param unless="$(arg use_odom_topic)" name="odom_tf_angular_variance" type="double" value="0.005"/>
+    <param unless="$(arg use_odom_topic)" name="odom_tf_linear_variance"  type="double" value="0.005"/> 
+    <param unless="$(arg use_odom_topic)" name="approx_sync" type="bool"  value="false"/>    
+  </node>
+</group>
 
     <include file="$(find robot_localization)/launch/ukf_template.launch"/>
     <param name="/ukf_se/frequency" value="300"/>
